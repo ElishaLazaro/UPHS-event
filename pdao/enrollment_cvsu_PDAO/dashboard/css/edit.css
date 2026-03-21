@@ -1,0 +1,324 @@
+:root {
+  --primary-color: #f8f9fa;
+  --secondary-color: #ffffff;
+  --text-color: #212529;
+  --border-color: #dee2e6;
+  --hover-color: #e9ecef;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--secondary-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #343a40;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+input[type="text"],
+input[type="color"],
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+textarea {
+  min-height: 200px;
+  resize: vertical;
+}
+
+.color-picker-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.color-picker-group input[type="color"] {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.color-value {
+  font-family: monospace;
+  background-color: var(--hover-color);
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.file-input-group {
+  margin-top: 1rem;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px dashed #dee2e6;
+}
+
+.file-input-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: 1px solid var(--border-color);
+}
+
+.file-input-group label:hover {
+  background-color: #f1f3f5;
+}
+
+.file-input-group label::before {
+  content: "📁";
+  font-size: 1.2rem;
+}
+
+.file-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-input-group input[type="file"] {
+  display: none;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  font-size: 0.9rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.preview-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background-color: white;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .file-preview {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.edit-dropdown-nav {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10;
+}
+.edit-dropdown-nav .dropdown-toggle {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+.edit-dropdown-nav .dropdown-toggle:after {
+  content: " \25BC";
+  font-size: 0.8em;
+  margin-left: 0.5em;
+}
+.edit-dropdown-nav .dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 0.2rem;
+  padding: 0.5rem 0;
+  z-index: 100;
+}
+.edit-dropdown-nav .dropdown-menu.show {
+  display: block;
+}
+.edit-dropdown-nav .dropdown-item {
+  padding: 0.6rem 1.2rem;
+  color: #212529;
+  text-decoration: none;
+  display: block;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.edit-dropdown-nav .dropdown-item:hover,
+.edit-dropdown-nav .dropdown-item.active {
+  background: var(--hover-color);
+  color: #1570ef;
+}
+@media (max-width: 768px) {
+  .edit-dropdown-nav {
+    justify-content: center;
+  }
+  .edit-dropdown-nav .dropdown-menu {
+    min-width: 160px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+.save-btn {
+  background: linear-gradient(90deg, #1570ef 0%, #4f8cff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(21, 112, 239, 0.15);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  cursor: pointer;
+  margin: 2rem auto 0 auto;
+  display: block;
+}
+.save-btn:hover,
+.save-btn:focus {
+  background: linear-gradient(90deg, #125ecf 0%, #3576e6 100%);
+  box-shadow: 0 4px 16px rgba(21, 112, 239, 0.25);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.scroll-arrows {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1000;
+}
+.scroll-arrows button {
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  color: #1570ef;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.7rem;
+  box-shadow: 0 2px 8px rgba(21, 112, 239, 0.1), 0 1.5px 6px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  border: 2px solid #e3e8f0;
+}
+.scroll-arrows button span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 2rem;
+  line-height: 1;
+}
+.scroll-arrows button:hover,
+.scroll-arrows button:focus {
+  background: #1570ef;
+  color: #fff;
+  border-color: #1570ef;
+  box-shadow: 0 4px 16px rgba(21, 112, 239, 0.18);
+  transform: translateY(-2px) scale(1.08);
+}
+@media (max-width: 768px) {
+  .scroll-arrows {
+    right: 1rem;
+    bottom: 1rem;
+  }
+  .scroll-arrows button {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+  .scroll-arrows button span {
+    font-size: 1.5rem;
+  }
+  .save-btn {
+    width: 100%;
+    padding: 0.75rem 0;
+  }
+}

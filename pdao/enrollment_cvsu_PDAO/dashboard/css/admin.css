@@ -1,0 +1,311 @@
+body {
+  background-color: #f9fafb;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.container-fluid {
+  max-width: 1200px;
+  padding: 1.5rem 2rem;
+  margin: 0 auto;
+}
+h1 {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #1f2937;
+}
+.card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+.card-body {
+  padding: 1.75rem 1.5rem;
+}
+.card-title {
+  font-size: 1.125rem;
+  color: #4b5563;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  user-select: none;
+}
+.counter {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #111827;
+  user-select: none;
+  min-height: 60px;
+}
+
+#skillsChart {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.06);
+  max-height: 400px;
+  width: 100% !important;
+}
+
+h3 {
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+#searchBar {
+  max-width: 400px;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #d1d5db;
+  transition: border-color 0.3s ease;
+}
+#searchBar:focus {
+  outline: none;
+  border-color: #1570ef;
+  box-shadow: 0 0 0 3px rgba(21, 112, 239, 0.3);
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0 12px;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+  overflow: hidden;
+}
+thead tr {
+  background-color: #1570ef;
+  color: white;
+  font-weight: 700;
+}
+thead th {
+  padding: 12px 20px;
+  user-select: none;
+  font-size: 0.9rem;
+  border: none;
+  text-align: left;
+}
+tbody tr {
+  background: #f9fafb;
+  transition: background-color 0.2s ease;
+  cursor: default;
+}
+tbody tr:hover {
+  background-color: #e3f0ff;
+}
+tbody td {
+  padding: 12px 20px;
+  border: none;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  gap: 0.25rem;
+  user-select: none;
+}
+.pagination button {
+  background: #1570ef;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.pagination button[disabled] {
+  background: #b6d4fe;
+  cursor: default;
+}
+.pagination button:hover:not([disabled]) {
+  background: #0f4fc1;
+}
+
+.spinner {
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #1570ef;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  margin-top: 20px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 768px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tbody tr {
+    margin: 0 0 1rem 0;
+    border-radius: 16px;
+    background: #fff;
+    padding: 1rem;
+  }
+  tbody td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+  tbody td::before {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: 600;
+    content: attr(data-label);
+    color: #6b7280;
+  }
+  .pagination {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .pagination button {
+    min-width: 36px;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+  }
+  /* Hide all page number buttons except current (active) and arrows */
+  .pagination
+    button:not(.active):not([aria-label*="Previous"]):not(
+      [aria-label*="Next"]
+    ) {
+    display: none;
+  }
+}
+
+#modalFieldCreate .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  color: #1e1e2f;
+  font-family: "Inter", sans-serif;
+}
+#modalFieldCreate .modal-header {
+  border-bottom: none;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  background: transparent;
+}
+#modalFieldCreate .modal-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #1570ef;
+}
+#modalFieldCreate .btn-close {
+  filter: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+#modalFieldCreate .btn-close:hover {
+  opacity: 1;
+}
+#modalFieldCreate .modal-body {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+#modalFieldCreate label.form-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #444444;
+  margin-bottom: 0.25rem;
+}
+#inputFieldName {
+  background-color: #f9f9fb;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  color: #1e1e2f;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  box-shadow: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
+#inputFieldName::placeholder {
+  color: #a1a1aa;
+  opacity: 1;
+}
+#inputFieldName:focus {
+  outline: none;
+  border-color: #1570ef;
+  box-shadow: 0 0 8px rgba(21, 112, 239, 0.4);
+  background-color: #ffffff;
+  color: #1e1e2f;
+}
+#fieldNameHelp {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+#modalFieldCreate .modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  background: transparent;
+}
+#modalFieldCreate .btn-secondary {
+  background: transparent;
+  border: 1.5px solid #9ca3af;
+  color: #6b7280;
+  border-radius: 10px;
+  padding: 0.55rem 1.25rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+#modalFieldCreate .btn-secondary:hover {
+  background: #e3f0ff;
+  border-color: #1570ef;
+  color: #1570ef;
+}
+#modalFieldCreate .btn-primary {
+  background: #1570ef;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(21, 112, 239, 0.6);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+#modalFieldCreate .btn-primary:hover,
+#modalFieldCreate .btn-primary:focus {
+  background: #0f4fc1;
+  box-shadow: 0 6px 18px rgba(15, 79, 193, 0.9);
+  color: #ffffff;
+}

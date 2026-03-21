@@ -1,0 +1,390 @@
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background: #fafafa;
+  color: #212529;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+/* Container max width */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Header with subject and controls */
+.subject-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+.subject-title {
+  font-weight: 600;
+  font-size: 1.75rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  color: #111827;
+}
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+}
+.icon-btn:hover,
+.icon-btn:focus {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+/* Create Question button */
+.btn-create {
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 5px rgb(37 99 235 / 0.3);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-create:hover,
+.btn-create:focus {
+  box-shadow: 0 5px 15px rgb(37 99 235 / 0.5);
+  background-color: #1d4ed8;
+  color: #fff;
+  outline: none;
+}
+
+/* Search bar */
+#searchBar {
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 1px 8px rgb(0 0 0 / 0.1);
+  border: 1px solid #d1d5db;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+#searchBar:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 8px rgb(37 99 235);
+  outline: none;
+  background-color: #fff;
+}
+
+/* Table styling */
+table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  width: 100%;
+  background: transparent;
+}
+thead tr {
+  border-bottom: 2px solid #e5e7eb;
+}
+thead th {
+  color: #374151;
+  text-align: left;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  user-select: none;
+}
+tbody tr {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 5px rgb(0 0 0 / 0.05);
+  transition: box-shadow 0.3s ease;
+  cursor: default;
+}
+tbody tr:hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+}
+tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+tbody td:first-child {
+  font-weight: 600;
+  color: #374151;
+  width: 40px;
+}
+
+/* Question preview: truncate text with ellipsis if too long */
+.question-text {
+  max-width: 480px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge styling for question type */
+.badge-mcq {
+  background-color: #a5b4fc;
+  color: #3730a3;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  padding: 0.3rem 0.8rem;
+  user-select: none;
+}
+.badge-identification {
+  background-color: #86efac;
+  color: #166534;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  padding: 0.3rem 0.8rem;
+  user-select: none;
+}
+.badge-truefalse {
+  background-color: #fcd34d;
+  color: #92400e;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border-radius: 12px;
+  padding: 0.3rem 0.8rem;
+  user-select: none;
+}
+
+/* Actions buttons in table */
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+.table-actions button {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.3rem 0.4rem;
+  border-radius: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.table-actions button:hover,
+.table-actions button:focus {
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.modal-content {
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 0.2);
+  padding: 1rem;
+}
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0.5rem;
+}
+.modal-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.modal-footer {
+  border-top: none;
+  padding-top: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+}
+.form-control,
+.form-select {
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  box-shadow: none !important;
+  border: 1.5px solid #d1d5db;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 8px rgb(37 99 235 / 0.3);
+  background-color: #fff;
+}
+textarea.form-control {
+  min-height: 120px;
+}
+.form-check-label {
+  color: #4b5563;
+}
+.custom-table {
+  width: 100%;
+}
+.form-check {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  user-select: none;
+}
+.radio-label {
+  font-size: 0.9rem;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.radio-label input[type="radio"] {
+  cursor: pointer;
+}
+#modalFieldCreate .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  color: #1e1e2f;
+  font-family: "Inter", sans-serif;
+}
+#modalFieldCreate .modal-header {
+  border-bottom: none;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  background: transparent;
+}
+#modalFieldCreate .modal-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #1570ef;
+}
+#modalFieldCreate .btn-close {
+  filter: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+#modalFieldCreate .btn-close:hover {
+  opacity: 1;
+}
+#modalFieldCreate .modal-body {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+#modalFieldCreate label.form-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #444444;
+  margin-bottom: 0.25rem;
+}
+#inputFieldName {
+  background-color: #f9f9fb;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  color: #1e1e2f;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  box-shadow: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
+#inputFieldName::placeholder {
+  color: #a1a1aa;
+  opacity: 1;
+}
+#inputFieldName:focus {
+  outline: none;
+  border-color: #1570ef;
+  box-shadow: 0 0 8px rgba(21, 112, 239, 0.4);
+  background-color: #ffffff;
+  color: #1e1e2f;
+}
+#fieldNameHelp {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+#modalFieldCreate .modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem 1.5rem 1.5rem;
+  background: transparent;
+}
+#modalFieldCreate .btn-secondary {
+  background: transparent;
+  border: 1.5px solid #9ca3af;
+  color: #6b7280;
+  border-radius: 10px;
+  padding: 0.55rem 1.25rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+#modalFieldCreate .btn-secondary:hover {
+  background: #e0e7ff;
+  border-color: #1570ef;
+  color: #1570ef;
+}
+#modalFieldCreate .btn-primary {
+  background: #1570ef;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(21, 112, 239, 0.6);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+#modalFieldCreate .btn-primary:hover,
+#modalFieldCreate .btn-primary:focus {
+  background: #0f4fc1;
+  box-shadow: 0 6px 18px rgba(15, 79, 193, 0.9);
+  color: #ffffff;
+}
+
+/* Pagination styles copied from admin.css for consistency */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0 0 0;
+  justify-content: center;
+}
+.pagination .page-item {
+  margin: 0 2px;
+}
+.pagination .page-link {
+  color: #374151;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+.pagination .page-link:hover,
+.pagination .page-item.active .page-link {
+  background: #1570ef;
+  color: #fff;
+  border-color: #1570ef;
+}
+.pagination .page-item.disabled .page-link {
+  color: #b0b0b0;
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+}
