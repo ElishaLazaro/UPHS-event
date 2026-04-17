@@ -70,7 +70,6 @@
     margin-bottom: 1rem;
   }
 
-  /* ─── Mini Calendar ─── */
   .mini-calendar { margin-bottom: 1.5rem; }
   .mini-calendar table { width: 100%; border-collapse: collapse; }
   .mini-calendar th,
@@ -104,7 +103,6 @@
   }
   .submission-btn:hover { background: #1565C0; }
 
-  /* ─── Event List ─── */
   .event-list-header { margin-bottom: 1rem; padding: 0 0.25rem; }
   .event-list-header h5 { font-size: 1.2rem; font-weight: 600; color: #333; margin: 0; }
   .event-list-header p  { font-size: 0.9rem; color: #666; margin: 0.25rem 0 0; }
@@ -131,7 +129,6 @@
   .no-events-message { text-align: center; padding: 3rem 1rem; color: #999; }
   .no-events-message i { font-size: 3rem; margin-bottom: 1rem; color: #ccc; display: block; }
 
-  /* ─── Event Detail Modal ─── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.45); z-index: 9999;
@@ -150,7 +147,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* close btn */
+
   .modal-close-btn {
     position: absolute; top: 14px; right: 16px; z-index: 2;
     background: rgba(255,255,255,0.88); border: none; border-radius: 50%;
@@ -160,7 +157,7 @@
   .modal-close-btn:hover { background: #fff; }
   .modal-close-btn i { font-size: 1.15rem; color: #555; }
 
- /* banner */
+
 .modal-banner { 
   width: 100%; 
   height: 220px; 
@@ -180,14 +177,13 @@
   color: rgba(255,255,255,0.5); 
 }
 
-/* Make sure the container doesn't add extra styling */
+
 #modalBanner {
   width: 100%;
   overflow: hidden;
   position: relative;
 }
 
-  /* content */
   .modal-body { padding: 1.8rem 2rem 2rem; }
 
   .modal-title {
@@ -234,7 +230,6 @@
         <?php include 'sidebar.php'; ?>
 
         <div class="layout-page">
-
           <!-- Navbar -->
           <nav class="layout-navbar container-xxl navbar-detached navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
@@ -255,6 +250,11 @@
               </div>
 
               <ul class="navbar-nav flex-row align-items-center ms-md-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="messages.php">
+                    <i class="bx bx-envelope" style="font-size: 24px;"></i>
+                  </a>
+                </li>
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
@@ -335,7 +335,7 @@
                   </div>
 
                   <div class="event-list" id="eventList">
-                    <?php while($row = $result->fetch_assoc()):
+                    <?php foreach($events as $row):
                       $dateString = $row['date'];
                       if (strpos($dateString, ' - ') !== false) {
                         $dateParts  = explode(' - ', $dateString);
@@ -362,10 +362,6 @@
                           data-event-image="<?php echo htmlspecialchars($imagePath, ENT_QUOTES); ?>"
                           data-event-formatted-date="<?php echo htmlspecialchars($formattedDate); ?>"
                           onclick="openEventDetail(this)">
-                        <img src="<?php echo $imagePath; ?>" 
-                            alt="<?php echo htmlspecialchars($row['event_name']); ?>" 
-                            class="event-image"
-                            onerror="this.src='../assets/img/eventPlaceholder.png'">
                         <div class="event-details">
                           <div class="event-title"><?php echo htmlspecialchars($row['event_name']); ?></div>
                           <div class="event-meta">
@@ -384,7 +380,7 @@
                           <?php endif; ?>
                         </div>
                       </div>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                   </div>
 
                   <div class="no-events-message" id="noEventsMessage" style="display:none;">
@@ -460,7 +456,14 @@
       const id = document.getElementById('1.6');
       if(id) id.classList.toggle('active');
 
-      const eventsData = <?php echo json_encode($events); ?>;
+      const eventsData = <?php echo json_encode(array_map(fn($r) => [
+          'id'    => $r['event_id'],
+          'title' => $r['event_name'],
+          'start' => $r['date'],
+          'time'  => $r['time'],
+          'venue' => $r['venue'] ?? '',
+          'image' => $r['event_image'] ?? ''
+      ], $events)); ?>;
       let selectedDate = null;
       let isSearching  = false;
 
@@ -492,10 +495,11 @@
 
         let count = 0;
         document.querySelectorAll('.event-card').forEach(card => {
-          const t = card.dataset.eventName.toLowerCase();
+          const name = (card.dataset.eventName || '').toLowerCase();
           const v = (card.dataset.eventVenue || '').toLowerCase();
           const d = (card.dataset.eventFormattedDate || '').toLowerCase();
-          if(t.includes(term) || v.includes(term) || d.includes(term)) {
+          const desc = (card.dataset.eventDescription || '').toLowerCase();
+          if(name.includes(term) || v.includes(term) || d.includes(term) || desc.includes(term)) {
             card.classList.remove('hidden'); card.classList.add('search-match'); count++;
           } else {
             card.classList.add('hidden'); card.classList.remove('search-match');
@@ -634,20 +638,7 @@
 
   /* banner image - UPDATED */
   const bannerContainer = document.getElementById('modalBanner');
-  if(img && img !== '../assets/img/eventPlaceholder.png') {
-    // Show actual event image
-    bannerContainer.innerHTML = 
-      '<img src="' + escapeHtml(img) + '" ' +
-      'alt="' + escapeHtml(name) + '" ' +
-      'class="modal-banner" ' +
-      'onerror="this.parentElement.innerHTML=\'<div class=\\\'modal-banner-placeholder\\\'><i class=\\\'tf-icons bx bx-image\\\'></i></div>\'">';
-  } else {
-    // Show placeholder
-    bannerContainer.innerHTML = 
-      '<div class="modal-banner-placeholder">' +
-      '<i class="tf-icons bx bx-image"></i>' +
-      '</div>';
-  }
+  bannerContainer.remove();
 
   /* description – use DB value; if empty, build a generic one */
   const descEl = document.getElementById('modalDescription');

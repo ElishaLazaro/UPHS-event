@@ -6,6 +6,13 @@
             <script> window.location = "../../../login.php"; </script>
         ';
     }
+    if (!function_exists('admin_contact_unread')) {
+        require_once __DIR__ . '/../../../actions/admin_contact_unread.php';
+    }
+    $topnavInquiryUnread = 0;
+    if (isset($conn) && $conn instanceof mysqli) {
+        $topnavInquiryUnread = admin_contact_unread($conn);
+    }
 ?>
 
 <nav
@@ -17,23 +24,19 @@
               </a>
             </div>
 
-            <div class="navbar-nav-right d-flex align-items-center justify-content-end" id="navbar-collapse">
-              <!-- Search -->
-              <div class="navbar-nav align-items-center me-auto">
-                <div class="nav-item d-flex align-items-center">
-                  <span class="w-px-22 h-px-22"><i class="icon-base bx bx-search icon-md"></i></span>
-                  <input
-                    type="text"
-                    class="form-control border-0 shadow-none ps-1 ps-sm-2 d-md-block d-none"
-                    placeholder="Search..."
-                    aria-label="Search..." />
-                </div>
-              </div>
-              <!-- /Search -->
-
-              <ul class="navbar-nav flex-row align-items-center ms-md-auto">
-                <!-- Place this tag where you want the button to render. -->
-
+            <div class="navbar-nav-right d-flex align-items-center justify-content-end flex-grow-1" id="navbar-collapse">
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <li class="nav-item me-2 me-xl-3">
+                  <a class="nav-link p-2 position-relative" href="messages.php" title="Website inquiries">
+                    <i class="icon-base bx bx-envelope icon-md"></i>
+                    <?php if ($topnavInquiryUnread > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.75rem; padding: 0.35rem 0.55rem; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                      <?php echo (int) $topnavInquiryUnread; ?>
+                      <span class="visually-hidden">new inquiries</span>
+                    </span>
+                    <?php endif; ?>
+                  </a>
+                </li>
 
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">

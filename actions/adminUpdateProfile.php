@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'conn.php';
+require_once __DIR__ . '/contact_inquiry_mail.php';
 
 if(!isset($_SESSION['id'])){
     echo json_encode(['success' => false, 'message' => 'Not logged in']);
@@ -110,10 +111,25 @@ if(isset($_POST['update_profile'])) {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
+
+    $sqlUt = 'SELECT ut_id, email FROM accounts WHERE user_id = ?';
+    $stmtUt = $conn->prepare($sqlUt);
+    $stmtUt->bind_param('i', $u_id);
+    $stmtUt->execute();
+    $utRow = $stmtUt->get_result()->fetch_assoc();
+    $stmtUt->close();
+    $ut_id = (int) ($utRow['ut_id'] ?? 0);
+    $accountEmail = trim((string) ($utRow['email'] ?? ''));
     
     // Validate inputs
     if(empty($firstName) || empty($lastName) || empty($username)) {
         $response['message'] = 'First name, last name, and username are required!';
+        echo json_encode($response);
+        exit();
+    }
+
+    if ($accountEmail === '' || !filter_var($accountEmail, FILTER_VALIDATE_EMAIL)) {
+        $response['message'] = 'Account email on file is missing or invalid. Contact an administrator.';
         echo json_encode($response);
         exit();
     }
@@ -150,14 +166,14 @@ if(isset($_POST['update_profile'])) {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
         // Update with password
-        $sql = "UPDATE accounts SET f_name = ?, m_name = ?, l_name = ?, username = ?, password = ? WHERE user_id = ?";
+        $sql = "UPDATE accounts SET f_name = ?, m_name = ?, l_name = ?, username = ?, password = ?, email = ? WHERE user_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssi", $firstName, $middleName, $lastName, $username, $hashed_password, $u_id);
+        $stmt->bind_param("ssssssi", $firstName, $middleName, $lastName, $username, $hashed_password, $accountEmail, $u_id);
     } else {
         // Update without password
-        $sql = "UPDATE accounts SET f_name = ?, m_name = ?, l_name = ?, username = ? WHERE user_id = ?";
+        $sql = "UPDATE accounts SET f_name = ?, m_name = ?, l_name = ?, username = ?, email = ? WHERE user_id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssi", $firstName, $middleName, $lastName, $username, $u_id);
+        $stmt->bind_param("sssssi", $firstName, $middleName, $lastName, $username, $accountEmail, $u_id);
     }
     
     if($stmt->execute()) {

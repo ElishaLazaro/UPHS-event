@@ -1,22 +1,12 @@
 <header class="header-section">
-    <div class="container">
-        <div class="logo">
-            <a href="./index.php">
-                <img src="img/logo1.png" alt="">
+    <div class="container" style="padding: 8px 0;">
+        <div class="d-flex align-items-center justify-content-center">
+            <a href="./index.php" style="position: absolute; left: 15px;">
+                <img src="img/logo_1.png" alt="Logo" height="50" width="50">
             </a>
+            <p class="text-white font-weight-bold mb-0" style="font-size: 1.4rem; font-weight: bold; font-family:Arial, Helvetica, sans-serif; letter-spacing: 0.5px;">
+                UNIVERSITY OF PERPETUAL HELP SYSTEM JONELTA GMA CAMPUS
+            </p>
         </div>
-        <div class="nav-menu">
-            <nav class="mainmenu mobile-menu">
-                <ul>
-                    <li id="1"><a href="./index.php">Home</a></li>
-                    <li id="2" ><a href="./about.php">About</a></li>
-                    <li id="3" ><a href="./speaker.php">Announcement</a></li>
-                    <li id="4" ><a href="./schedule.php">Schedule</a></li>
-                    <li id="5" ><a href="./contact.php">Contacts</a></li>
-                </ul>
-            </nav>
-            <a href="login.php" class="primary-btn top-btn"><i class="fa fa-ticket"></i> Login</a>
-        </div>
-        <div id="mobile-menu-wrap"></div>
     </div>
 </header>

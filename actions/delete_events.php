@@ -18,7 +18,7 @@
         $stmt -> close();
         $conn -> close();
 
-        header('Location: ../users/organization/html/events.php');
+        header('Location: ../users/organization/html/events.php?view=requests');
     }        
 
 ?>

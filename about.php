@@ -31,30 +31,6 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Header Section Begin -->
-    <!-- <header class="header-section">
-        <div class="container">
-            <div class="logo">
-                <a href="./index.html">
-                    <img src="img/logo1.png" alt="">
-                </a>
-            </div>
-            <div class="nav-menu">
-                <nav class="mainmenu mobile-menu">
-                    <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
-                        <li><a href="./about-us.html">About</a></li>
-                        <li><a href="./speaker.html">Announcement</a></li>
-                        <li><a href="./schedule.html">Schedule</a></li>
-                        <li><a href="./contact.html">Contacts</a></li>
-                    </ul>
-                </nav>
-                <a href="login.php" class="primary-btn top-btn"><i class="fa fa-ticket"></i> Login</a>
-            </div>
-            <div id="mobile-menu-wrap"></div>
-        </div>
-    </header> -->
-
     <?php 
         include 'navbar.php';
     ?>

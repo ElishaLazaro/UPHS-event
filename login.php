@@ -30,23 +30,7 @@
     <input type="password" id="loginPassword" name="password" placeholder="Password" required>
     <button name="login_submit" type="submit">Login</button>
     <div class="links">
-      <a href="#" id="toRegister">Create Account</a> |
       <a href="forgotPassword.php" id="#">Forgot Password?</a>
-    </div>
-  </form>
-
-  <!-- REGISTER FORM -->
-  <form id="registerForm" method="post" action="login.php">
-    <h2>Register</h2>
-    <input type="text" id="lname" name="l_name" placeholder="Last Name" required>
-    <input type="text" id="fname" name="f_name" placeholder="First name" required>
-    <input type="text" id="mname" name="m_name" placeholder="Middle Name" required>
-    <input type="text" id="idno" name="sch_id" placeholder="ID Number" required>
-    <input type="text" id="uname" name="regUsername" placeholder="Username" required>
-    <input type="password" id="regPassword" name="regPassword" placeholder="Password" required>
-    <button name="reg_submit" type="submit">Register</button>
-    <div class="links">
-      <a href="#" id="toLoginFromRegister">Already have an account?</a>
     </div>
   </form>
 

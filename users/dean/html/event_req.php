@@ -2,19 +2,39 @@
   session_start();
 
   require '../../../actions/conn.php';
+  require '../../../actions/pagination.php';
+  require_once '../../../actions/events_list_search.php';
 
   $request = 3;
-  $u_id = $_SESSION['id'];
+  $q = events_list_parse_query();
+  $req_page = pagination_parse_page();
 
-  $sql = 
+  $types = 'i';
+  $params = [$request];
+  $search_frag = events_list_append_search_fragment($q, $types, $params);
+
+  $cnt_sql = "SELECT COUNT(*) AS cnt FROM events WHERE event_status = ?" . $search_frag;
+  $cstmt = $conn->prepare($cnt_sql);
+  $cstmt->bind_param($types, ...$params);
+  $cstmt->execute();
+  $total_rows = (int) ($cstmt->get_result()->fetch_assoc()['cnt'] ?? 0);
+  [$page, $per_page, $offset, $total_pages] = pagination_limits($total_rows, $req_page);
+
+  $types_sel = $types . 'ii';
+  $params_sel = array_merge($params, [$per_page, $offset]);
+
+  $sql =
   "SELECT event_id, event_name, activity, date_start, date_end, time_start, time_end, CONCAT(date_start, ' - ', date_end) as date, CONCAT(time_start, ' - ', time_end) as time, venue
-   FROM events 
+   FROM events
    WHERE event_status = ?
+   " . $search_frag . "
+   ORDER BY date_start DESC, event_id DESC
+   LIMIT ? OFFSET ?
   ";
 
   $stmt = $conn->prepare($sql);
-  $stmt -> bind_param("i", $request);
-  $stmt -> execute();
+  $stmt->bind_param($types_sel, ...$params_sel);
+  $stmt->execute();
 
   $result = $stmt->get_result();
 ?>
@@ -116,6 +136,21 @@
 
                 <h4 class="fw-bold py-3 mb-4"><i class="bx bx-calendar-event"></i>Event Request</h4>
 
+                <form id="eventsListSearchForm" method="get" class="row g-2 mb-3 align-items-end flex-wrap">
+                  <div class="col-auto flex-grow-1" style="min-width: 200px; max-width: 360px;">
+                    <label class="form-label small text-muted mb-0">Search</label>
+                    <input type="search" name="q" class="form-control form-control-sm" placeholder="Name, activity, venue…" value="<?php echo htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" autocomplete="off">
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                  </div>
+                  <?php if ($q !== ''): ?>
+                  <div class="col-auto">
+                    <a href="<?php echo htmlspecialchars(basename($_SERVER['PHP_SELF']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-outline-secondary">Clear</a>
+                  </div>
+                  <?php endif; ?>
+                </form>
+
                 <!-- Add Entry Modal -->
                 <div class="modal fade" id="addLogbookModal" tabindex="-1" aria-labelledby="addLogbookModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
@@ -127,6 +162,7 @@
                       </div>
 
                       <div class="modal-body">
+                        <input type="hidden" name="_return" value="dean_req">
                         <div class="mb-3">
                           <label for="event_name" class="form-label">Event Name</label>
                           <input type="text" name="event_name" id="event_name" class="form-control" required>
@@ -164,6 +200,15 @@
                             <label for="time_end" class="form-label">Time End</label>
                             <input type="time" name="time_end" id="time_end" class="form-control" required>
                           </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="event_priority" class="form-label">Priority</label>
+                          <select name="event_priority" id="event_priority" class="form-select" required>
+                            <option value="minor" selected>Minor priority</option>
+                            <option value="main">Main priority</option>
+                          </select>
+                          <div class="form-text">Main priority is used for the public homepage countdown when the event is approved.</div>
                         </div>
                       </div>
 
@@ -294,16 +339,18 @@
                             
                             <!-- Decline Modal -->
                             <div class='modal fade' id='declineModal$event_id' tabindex='-1' aria-hidden='true'>
-                              <div class='modal-dialog modal-dialog-centered modal-sm'>
+                              <div class='modal-dialog modal-dialog-centered'>
                                 <form action='../../../actions/decline_event.php' method='POST' class='modal-content'>
                                   <div class='modal-header'>
                                     <h6 class='modal-title fw-semibold'>Confirm Decline</h6>
                                     <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
                                   </div>
                                   <div class='modal-body'>
-                                    <input type='hidden' name='event_id' value='$event_id'>
+                                    <input type='hidden' name='decline_eventId' value='$event_id'>
                                     <p class='mb-2'>Decline this event?</p>
-                                    <p class='text-muted mb-0 small'>$event_name</p>
+                                    <p class='text-muted small mb-3'>$event_name</p>
+                                    <label for='decline_reason_$event_id' class='form-label'>Reason for declining <span class='text-danger'>*</span></label>
+                                    <textarea class='form-control' name='decline_reason' id='decline_reason_$event_id' rows='4' required maxlength='2000' placeholder='Explain why this event is being declined...'></textarea>
                                   </div>
                                   <div class='modal-footer'>
                                     <button type='button' class='btn btn-sm btn-secondary' data-bs-dismiss='modal'>Cancel</button>
@@ -317,6 +364,7 @@
                       ?> 
                       </tbody>
                       </table>
+                      <?php pagination_render_nav($page, $total_pages, $total_rows); ?>
                       <?php echo $modals; ?>
                   </div>
                 </div>

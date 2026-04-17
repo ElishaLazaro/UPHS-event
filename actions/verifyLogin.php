@@ -1,78 +1,68 @@
 <?php
-    include 'conn.php';
 
-    if(isset($_POST['login_submit'])){
-        $email = $_POST['email'];
-        $password = $_POST['password'];
+declare(strict_types=1);
 
-        if(!empty($email)){
-            $sql = "SELECT * FROM accounts where username = ? or email = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ss", $email, $email);
+require __DIR__ . '/conn.php';
 
-            $stmt->execute();
+if (!isset($_POST['login_submit'])) {
+    return;
+}
 
-            $result = $stmt->get_result();
+$email = trim((string) ($_POST['email'] ?? ''));
+$password = (string) ($_POST['password'] ?? '');
 
-            if($result->num_rows==1){
-                $user = $result->fetch_assoc();
+if ($email === '') {
+    return;
+}
 
-                if(password_verify($password, $user['password'])){
-                    echo 
-                    '
-                        <script> alert("Logged in successfully!"); </script>
-                    ';
+$sql = 'SELECT * FROM accounts WHERE username = ? OR email = ? LIMIT 1';
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    return;
+}
 
-                    switch($user['ut_id']){
-                        case 1: 
-                            echo 
-                            '
-                                <script> window.location = "users/admin/html/index.php"; </script>
-                            ';
-                            break;
-                        case 2: 
-                            echo 
-                            '
-                                <script> window.location = "users/dean/html/organizations.php"; </script>
-                            ';
-                            break;
-                        case 3: 
-                            echo 
-                            '
-                                <script> window.location = "users/organization/html/org_activities.php"; </script>
-                            ';
-                            break;
-                        case 4: 
-                            echo 
-                            '
-                                <script> window.location = "users/admin/html/organizations.php"; </script>
-                            ';
-                            break;
-                    }
+$stmt->bind_param('ss', $email, $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
-                    $_SESSION['id'] = $user['user_id'];
+if ($result->num_rows !== 1) {
+    $stmt->close();
+    $conn->close();
+    echo '<script>alert("Account not found.");</script>';
+    echo '<script>window.location = "login.php";</script>';
 
-                    $stmt->close();
-                    $conn->close();
-                }
-                else{
+    return;
+}
 
-                    $stmt->close();
-                    $conn->close();
+$user = $result->fetch_assoc();
+$stmt->close();
 
-                    echo 
-                    '
-                    <script> alert("Password is incorrect!"); </script>
-                    <script> window.location = "login.php"; </script>
-                    ';                    
-                }
-            }
-        }
-        else{
-            $stmt->close();
-            $conn->close();
-            
-            echo "Username does not exist!";        
-        }     
-    }
-?>
+if (!is_array($user) || !password_verify($password, (string) $user['password'])) {
+    $conn->close();
+    echo '<script>alert("Password is incorrect!");</script>';
+    echo '<script>window.location = "login.php";</script>';
+
+    return;
+}
+
+$ut = (int) ($user['ut_id'] ?? 0);
+// Only Admin (1) and Organization member (3) may use this system.
+if (!in_array($ut, [1, 3], true)) {
+    $conn->close();
+    echo '<script>alert("This account type is not enabled for this portal. Please use an Admin or Organization account.");</script>';
+    echo '<script>window.location = "login.php";</script>';
+
+    return;
+}
+
+$_SESSION['id'] = (int) $user['user_id'];
+
+echo '<script>alert("Logged in successfully!");</script>';
+
+if ($ut === 1) {
+    echo '<script>window.location = "users/admin/html/home.php";</script>';
+} else {
+    echo '<script>window.location = "users/organization/html/home.php";</script>';
+}
+
+$conn->close();

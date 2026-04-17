@@ -3,6 +3,12 @@
     require 'conn.php';
 
     if(isset($_POST['update_event'])){
+        $rv = $_POST['return_view'] ?? 'approved';
+        if (!in_array($rv, ['approved', 'declined', 'pending'], true)) {
+            $rv = 'approved';
+        }
+        $adminEventsBack = '../users/admin/html/events.php?view=' . urlencode($rv);
+
         $event_id = $_POST['update_eventId'];
         $event_name = $_POST['update_eventName'];
         $activity = $_POST['update_activity'];
@@ -41,12 +47,12 @@
                     $event_image = $new_filename;
                 } else {
                     echo '<script>alert("Error uploading new image!");</script>';
-                    echo '<script>window.location = "../users/admin/html/events.php";</script>';
+                    echo '<script>window.location = ' . json_encode($adminEventsBack) . ';</script>';
                     exit();
                 }
             } else {
                 echo '<script>alert("Invalid image type. Please upload JPEG, PNG, GIF, or WEBP.");</script>';
-                echo '<script>window.location = "../users/admin/html/events.php";</script>';
+                echo '<script>window.location = ' . json_encode($adminEventsBack) . ';</script>';
                 exit();
             }
         }
@@ -72,10 +78,7 @@
         $stmt->close();
         $conn->close();
 
-        echo
-        '
-            <script> alert("Updated successfully"); </script>
-            <script> window.location = "../users/admin/html/events.php"; </script>
-        ';
+        echo '<script> alert("Updated successfully"); </script>'
+            . '<script> window.location = ' . json_encode($adminEventsBack) . ';</script>';
     }
 ?>

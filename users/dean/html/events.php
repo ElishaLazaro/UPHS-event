@@ -2,19 +2,55 @@
   session_start();
 
   require '../../../actions/conn.php';
+  require '../../../actions/pagination.php';
+  require_once '../../../actions/events_list_search.php';
 
   $able = 1;
   $u_id = $_SESSION['id'];
+  $q = events_list_parse_query();
+  $req_page = pagination_parse_page();
 
-  $sql = 
-  "SELECT event_id, event_name, activity, date_start, date_end, time_start, time_end, CONCAT(date_start, ' - ', date_end) as date, CONCAT(time_start, ' - ', time_end) as time, venue
-   FROM events 
-   WHERE event_status = ? && u_id = ?
-  ";
+  $types = '';
+  $params = [];
+  $search_frag = events_list_append_search_fragment($q, $types, $params);
 
-  $stmt = $conn->prepare($sql);
-  $stmt -> bind_param("ii", $able, $u_id);
-  $stmt -> execute();
+  if ($search_frag === '') {
+    $cnt_sql = "SELECT COUNT(*) AS cnt FROM events";
+    $total_rows = (int) ($conn->query($cnt_sql)->fetch_assoc()['cnt'] ?? 0);
+  } else {
+    $cnt_sql = "SELECT COUNT(*) AS cnt FROM events WHERE 1=1" . $search_frag;
+    $cstmt = $conn->prepare($cnt_sql);
+    $cstmt->bind_param($types, ...$params);
+    $cstmt->execute();
+    $total_rows = (int) ($cstmt->get_result()->fetch_assoc()['cnt'] ?? 0);
+  }
+  [$page, $per_page, $offset, $total_pages] = pagination_limits($total_rows, $req_page);
+
+  $types_sel = $types . 'ii';
+  $params_sel = array_merge($params, [$per_page, $offset]);
+
+  if ($search_frag === '') {
+    $sql =
+    "SELECT event_id, event_name, activity, date_start, date_end, time_start, time_end, CONCAT(date_start, ' - ', date_end) as date, CONCAT(time_start, ' - ', time_end) as time, venue
+     FROM events
+     ORDER BY date_start DESC, event_id DESC
+     LIMIT ? OFFSET ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ii', $per_page, $offset);
+  } else {
+    $sql =
+    "SELECT event_id, event_name, activity, date_start, date_end, time_start, time_end, CONCAT(date_start, ' - ', date_end) as date, CONCAT(time_start, ' - ', time_end) as time, venue
+     FROM events
+     WHERE 1=1
+     " . $search_frag . "
+     ORDER BY date_start DESC, event_id DESC
+     LIMIT ? OFFSET ?
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param($types_sel, ...$params_sel);
+  }
+  $stmt->execute();
 
   $result = $stmt->get_result();
 ?>
@@ -115,6 +151,22 @@
               <div class="container-xxl flex-grow-1 container-p-y">
 
                 <h4 class="fw-bold py-3 mb-4"><i class="bx bx-calendar-event"></i>Events</h4>
+
+                <form id="eventsListSearchForm" method="get" class="row g-2 mb-3 align-items-end flex-wrap">
+                  <div class="col-auto flex-grow-1" style="min-width: 200px; max-width: 360px;">
+                    <label class="form-label small text-muted mb-0">Search</label>
+                    <input type="search" name="q" class="form-control form-control-sm" placeholder="Name, activity, venue…" value="<?php echo htmlspecialchars($q, ENT_QUOTES, 'UTF-8'); ?>" autocomplete="off">
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                  </div>
+                  <?php if ($q !== ''): ?>
+                  <div class="col-auto">
+                    <a href="<?php echo htmlspecialchars(basename($_SERVER['PHP_SELF']), ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-sm btn-outline-secondary">Clear</a>
+                  </div>
+                  <?php endif; ?>
+                </form>
+
                 <!-- Add Entry Button -->
                 <div class="mb-3 text-end">
                   <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLogbookModal">
@@ -170,6 +222,15 @@
                             <label for="time_end" class="form-label">Time End</label>
                             <input type="time" name="time_end" id="time_end" class="form-control" required>
                           </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="event_priority" class="form-label">Priority</label>
+                          <select name="event_priority" id="event_priority" class="form-select" required>
+                            <option value="minor" selected>Minor priority</option>
+                            <option value="main">Main priority</option>
+                          </select>
+                          <div class="form-text">Main priority drives the public homepage countdown among approved events.</div>
                         </div>
                       </div>
 
@@ -311,6 +372,7 @@
                         ?> 
                       </tbody>
                     </table>
+                    <?php pagination_render_nav($page, $total_pages, $total_rows); ?>
                     <?php echo $modals; ?>
                   </div>
                 </div>

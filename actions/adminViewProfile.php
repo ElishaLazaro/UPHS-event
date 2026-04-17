@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'conn.php';
+require_once __DIR__ . '/contact_inquiry_mail.php';
 
 // Check if user is logged in
 if(!isset($_SESSION['id'])){
@@ -10,8 +11,10 @@ if(!isset($_SESSION['id'])){
 
 $u_id = $_SESSION['id'];
 
+$inqSelect = accounts_inquiry_notify_column_exists($conn) ? ', inquiry_notify_email' : '';
+
 // Fetch user data
-$sql = "SELECT user_id, username, email, f_name, m_name, l_name, sch_id, profile_picture, user_status 
+$sql = "SELECT user_id, username, email, ut_id{$inqSelect}, f_name, m_name, l_name, sch_id, profile_picture, user_status 
         FROM accounts 
         WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
@@ -24,7 +27,9 @@ if($result->num_rows > 0) {
     
     $user_id = $user_data['user_id'];
     $username = $user_data['username'];
-    $email = $user_data['email'];
+    $email = $user_data['email'] ?? '';
+    $ut_id = (int) ($user_data['ut_id'] ?? 0);
+    $inquiry_notify_email = $user_data['inquiry_notify_email'] ?? '';
     $f_name = $user_data['f_name'];
     $m_name = $user_data['m_name'];
     $l_name = $user_data['l_name'];

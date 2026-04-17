@@ -99,22 +99,22 @@
                 <div class="col-lg-12">
                     <div class="section-title">
                         <h2>Contact Us By Email!</h2>
-                        <p>Fill out the form below to recieve a free and confidential intial consultation.</p>
+                        <p>Fill out the form below to receive a free and confidential intial consultation.</p>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <form action="#" class="comment-form contact-form">
+                    <form action="contacts.php" class="comment-form contact-form">
                         <div class="row">
                             <div class="col-lg-4">
-                                <input type="text" placeholder="Name">
+                                <input type="text" name="name"  placeholder="Name">
                             </div>
                             <div class="col-lg-4">
-                                <input type="text" placeholder="Email">
+                                <input type="text" name="email" placeholder="Email">
                             </div>
                             <div class="col-lg-4">
-                                <input type="text" placeholder="Phone">
+                                <input type="text" name="" placeholder="Phone">
                             </div>
                             <div class="col-lg-12 text-center">
                                 <textarea placeholder="Messages"></textarea>

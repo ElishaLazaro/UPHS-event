@@ -25,7 +25,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Admin - Calendar of Events</title>
+    <title>Organization - Calendar of Events</title>
 
     <meta name="description" content="" />
 
@@ -121,8 +121,7 @@
   .event-card.hidden { display: none; }
   .event-card.search-match { border-left: 4px solid #1976D2; }
 
-  .event-image { width: 100px; height: 100px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
-  .event-details { flex: 1; }
+  .event-details { flex: 1; min-width: 0; }
   .event-title { font-size: 1.1rem; font-weight: 600; color: #333; margin-bottom: 0.4rem; }
 
   .event-meta { display: flex; align-items: center; gap: 0.5rem; color: #666; font-size: 0.9rem; margin-bottom: 0.15rem; }
@@ -221,7 +220,6 @@
   .modal-organizer strong { color: #555; }
 
   @media (max-width: 768px) {
-    .event-image { width: 80px; height: 80px; }
     .modal-body { padding: 1.4rem 1.25rem 1.6rem; }
     .modal-title { font-size: 1.2rem; }
   }
@@ -335,7 +333,7 @@
                   </div>
 
                   <div class="event-list" id="eventList">
-                    <?php while($row = $result->fetch_assoc()):
+                    <?php foreach($events as $row):
                       $dateString = $row['date'];
                       if (strpos($dateString, ' - ') !== false) {
                         $dateParts  = explode(' - ', $dateString);
@@ -362,10 +360,6 @@
                           data-event-image="<?php echo htmlspecialchars($imagePath, ENT_QUOTES); ?>"
                           data-event-formatted-date="<?php echo htmlspecialchars($formattedDate); ?>"
                           onclick="openEventDetail(this)">
-                        <img src="<?php echo $imagePath; ?>" 
-                            alt="<?php echo htmlspecialchars($row['event_name']); ?>" 
-                            class="event-image"
-                            onerror="this.src='../assets/img/eventPlaceholder.png'">
                         <div class="event-details">
                           <div class="event-title"><?php echo htmlspecialchars($row['event_name']); ?></div>
                           <div class="event-meta">
@@ -384,7 +378,7 @@
                           <?php endif; ?>
                         </div>
                       </div>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                   </div>
 
                   <div class="no-events-message" id="noEventsMessage" style="display:none;">
@@ -460,7 +454,14 @@
       const id = document.getElementById('home');
       if(id) id.classList.toggle('active');
 
-      const eventsData = <?php echo json_encode($events); ?>;
+      const eventsData = <?php echo json_encode(array_map(fn($r) => [
+          'id'    => $r['event_id'],
+          'title' => $r['event_name'],
+          'start' => $r['date'],
+          'time'  => $r['time'],
+          'venue' => $r['venue'] ?? '',
+          'image' => $r['event_image'] ?? ''
+      ], $events)); ?>;
       let selectedDate = null;
       let isSearching  = false;
 
@@ -492,10 +493,11 @@
 
         let count = 0;
         document.querySelectorAll('.event-card').forEach(card => {
-          const t = card.dataset.eventName.toLowerCase();
+          const name = (card.dataset.eventName || '').toLowerCase();
           const v = (card.dataset.eventVenue || '').toLowerCase();
           const d = (card.dataset.eventFormattedDate || '').toLowerCase();
-          if(t.includes(term) || v.includes(term) || d.includes(term)) {
+          const desc = (card.dataset.eventDescription || '').toLowerCase();
+          if(name.includes(term) || v.includes(term) || d.includes(term) || desc.includes(term)) {
             card.classList.remove('hidden'); card.classList.add('search-match'); count++;
           } else {
             card.classList.add('hidden'); card.classList.remove('search-match');
@@ -634,20 +636,7 @@
 
   /* banner image - UPDATED */
   const bannerContainer = document.getElementById('modalBanner');
-  if(img && img !== '../assets/img/eventPlaceholder.png') {
-    // Show actual event image
-    bannerContainer.innerHTML = 
-      '<img src="' + escapeHtml(img) + '" ' +
-      'alt="' + escapeHtml(name) + '" ' +
-      'class="modal-banner" ' +
-      'onerror="this.parentElement.innerHTML=\'<div class=\\\'modal-banner-placeholder\\\'><i class=\\\'tf-icons bx bx-image\\\'></i></div>\'">';
-  } else {
-    // Show placeholder
-    bannerContainer.innerHTML = 
-      '<div class="modal-banner-placeholder">' +
-      '<i class="tf-icons bx bx-image"></i>' +
-      '</div>';
-  }
+  bannerContainer.remove();
 
   /* description – use DB value; if empty, build a generic one */
   const descEl = document.getElementById('modalDescription');

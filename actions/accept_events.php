@@ -10,6 +10,7 @@
          SET 
             event_status = ?
            ,events_date_posted = ? 
+           ,decline_reason = NULL
         WHERE event_id = ?
         ";
 
@@ -19,8 +20,8 @@
         $stmt -> execute();
 
         echo
-        '         
-            <script> window.location = "../users/dean/html/event_req.php" </script>            
+        '
+            <script> window.location = "../users/admin/html/events.php?view=pending" </script>
         ';
     }
 ?>

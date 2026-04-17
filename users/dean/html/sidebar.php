@@ -20,7 +20,7 @@
 
           <ul class="menu-inner py-1">
             <!-- Dashboards -->
-            <li id="1" class="menu-item">
+            <!-- <li id="1" class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-home-smile"></i>
                 <div class="text-truncate" data-i18n="Dashboards">Activities</div>
@@ -31,6 +31,13 @@
                     <div class="text-truncate" data-i18n="Analytics">Organizations</div>
                   </a>
               </ul>
+            </li> -->
+
+            <li id="1.6" class="menu-item">
+              <a href="home.php" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-alt"></i>
+                <div class="text-truncate" data-i18n="Reports">Home</div>
+              </a>
             </li>
 
             <li id="2" class="menu-item">
@@ -69,12 +76,12 @@
               </a>
             </li> -->
 
-            <li id="3" class="menu-item">
+            <!-- <li id="3" class="menu-item">
               <a href="announcement.php" class="menu-link">
               <i class="menu-icon tf-icons bx bx-message-square"></i>
                 <div class="text-truncate" data-i18n="Reports">Announcements</div>
               </a>
-            </li>
+            </li> -->
 
             <!-- Pages -->
             <li id="4" class="menu-item">

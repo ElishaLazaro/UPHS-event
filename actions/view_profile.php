@@ -1,32 +1,43 @@
 <?php
-    session_start();
-    require 'conn.php';
 
-    $user_id = $_SESSION['id'];
+declare(strict_types=1);
 
-    $sql = 
-    "SELECT 
-         f_name
-       , m_name 
-       , l_name
-       , username
-    
-    FROM accounts
+session_start();
+require __DIR__ . '/conn.php';
 
-    WHERE user_id = ?;
-    ";
+if (!isset($_SESSION['id'])) {
+    header('Location: ../login.php');
+    exit;
+}
 
-    $stmt = $conn->prepare($sql);
-    $stmt -> bind_param("i", $user_id);
-    $stmt -> execute();
+$user_id = (int) $_SESSION['id'];
+if ($user_id <= 0) {
+    session_destroy();
+    header('Location: ../login.php');
+    exit;
+}
 
-    $result = $stmt->get_result();
+$sql = 'SELECT f_name, m_name, l_name, username FROM accounts WHERE user_id = ? LIMIT 1';
 
-    $row = mysqli_fetch_assoc($result);
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    header('Location: ../login.php');
+    exit;
+}
 
-    $f_name = $row['f_name'];
-    $m_name = $row['m_name'];
-    $l_name = $row['l_name'];
-    $username = $row['username'];
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result ? $result->fetch_assoc() : null;
+$stmt->close();
 
-?>
+if (!is_array($row)) {
+    session_destroy();
+    header('Location: ../login.php');
+    exit;
+}
+
+$f_name = (string) ($row['f_name'] ?? '');
+$m_name = (string) ($row['m_name'] ?? '');
+$l_name = (string) ($row['l_name'] ?? '');
+$username = (string) ($row['username'] ?? '');

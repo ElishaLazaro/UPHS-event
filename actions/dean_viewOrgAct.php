@@ -102,18 +102,6 @@ if(count($all_posts) > 0){
                     <small class='ms-3'><i class='bx bx-map me-1'></i>$venue</small>
                   </div>
                 </div>
-                
-                <div class='d-flex gap-3'>
-                  <button class='btn btn-sm btn-outline-primary'>
-                    <i class='bx bx-heart me-1'></i>Interested (24)
-                  </button>
-                  <button class='btn btn-sm btn-outline-secondary'>
-                    <i class='bx bx-comment me-1'></i>Comment
-                  </button>
-                  <button class='btn btn-sm btn-outline-secondary'>
-                    <i class='bx bx-share-alt me-1'></i>Share
-                  </button>
-                </div>
               </div>
             </div>
             ";
@@ -144,18 +132,6 @@ if(count($all_posts) > 0){
                   <span class='badge bg-label-warning mb-2'>Announcement</span>
                   <h5 class='mb-2'>$title</h5>
                   <p class='mb-2'>$description</p>
-                </div>
-                
-                <div class='d-flex gap-3'>
-                  <button class='btn btn-sm btn-outline-primary'>
-                    <i class='bx bx-heart me-1'></i>Like
-                  </button>
-                  <button class='btn btn-sm btn-outline-secondary'>
-                    <i class='bx bx-comment me-1'></i>Comment
-                  </button>
-                  <button class='btn btn-sm btn-outline-secondary'>
-                    <i class='bx bx-share-alt me-1'></i>Share
-                  </button>
                 </div>
               </div>
             </div>

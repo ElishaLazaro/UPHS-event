@@ -1,8 +1,9 @@
 <?php
     $dbservername = "localhost";
     $dbusername = "root";
-    $dbpassword = "yes";
+    $dbpassword = "";
     $dbname = "uphs_events";
+    
     
     $conn = mysqli_connect($dbservername, $dbusername, $dbpassword, $dbname);
     if (!$conn) {

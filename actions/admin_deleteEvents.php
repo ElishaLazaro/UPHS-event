@@ -2,6 +2,12 @@
     require 'conn.php';
 
     if(isset($_POST['delete_event'])){
+        $rv = $_POST['return_view'] ?? 'approved';
+        if (!in_array($rv, ['approved', 'declined', 'pending'], true)) {
+            $rv = 'approved';
+        }
+        $adminEventsBack = '../users/admin/html/events.php?view=' . urlencode($rv);
+
         $event_id = $_POST['delete_eventId'];
         $disable = 0;
         $sql = 
@@ -18,7 +24,7 @@
         $stmt -> close();
         $conn -> close();
 
-        header('Location: ../users/admin/html/events.php');
+        header('Location: ' . $adminEventsBack);
     }        
 
 ?>

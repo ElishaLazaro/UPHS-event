@@ -1,54 +1,54 @@
 <?php
-    function keepLogged($ut_id){
-        switch($ut_id){
-            case 1:
-                header("Location: users/admin/html/index.php"); 
-                break;
-            case 2: 
-                header("Location: users/dean/html/organizations.php"); 
-                break;
-            case 3: 
-                header("Location: users/organization/html/org_activities.php"); 
-                break;
-            case 4: 
-                header("Location: users/student/html/index.php"); 
-                break;
-            default:
-                session_destroy();
-                echo '
-                    <script>
-                        alert("Hi!");
-                    </script>';
-                break;
-        }
+
+declare(strict_types=1);
+
+function keepLogged(int $ut_id): void
+{
+    switch ($ut_id) {
+        case 1:
+            header('Location: users/admin/html/home.php');
+            exit;
+        case 3:
+            header('Location: users/organization/html/home.php');
+            exit;
+        default:
+            session_destroy();
+            header('Location: login.php');
+            exit;
     }
+}
 
-    require 'conn.php';
+require __DIR__ . '/conn.php';
 
-    if(isset($_SESSION['id'])){
-        $id = $_SESSION['id'];
-    
-        $sql = 
-        "SELECT ut_id
+if (!isset($_SESSION['id'])) {
+    return;
+}
 
-        FROM accounts
+$id = (int) $_SESSION['id'];
+if ($id <= 0) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
 
-        WHERE user_id = ?
-        ";
+$sql = 'SELECT ut_id FROM accounts WHERE user_id = ? LIMIT 1';
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    return;
+}
 
-        $stmt = $conn->prepare($sql);
-        $stmt -> bind_param("i", $id);
-        $stmt -> execute();
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result ? $result->fetch_assoc() : null;
+$stmt->close();
+$conn->close();
 
-        $result = $stmt->get_result();
+if (!is_array($user)) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
 
-        $user = $result->fetch_assoc();
-
-        $ut_id = $user['ut_id'];
-
-        keepLogged($ut_id);
-
-        $stmt -> close();
-        $conn -> close();
-    }
-?>
+$ut_id = (int) ($user['ut_id'] ?? 0);
+keepLogged($ut_id);

@@ -1,5 +1,5 @@
 <?php
-   require '../../../actions/view_profile.php'
+   require '../../../actions/view_profile.php';
 ?>
 <!DOCTYPE html>
 <html lang="en" class="layout-menu-fixed layout-compact" data-assets-path="../assets/" data-template="vertical-menu-template-free">
@@ -66,19 +66,19 @@
                       <!-- First Name -->
                       <div class="col-md-10">
                         <label for="firstName" class="form-label">First Name</label>
-                        <input class="form-control" type="text" id="firstName" name="firstName" placeholder="<?php echo $f_name?>" autofocus />
+                        <input class="form-control" type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($f_name, ENT_QUOTES, 'UTF-8'); ?>" autofocus />
                       </div>
 
                       <!-- Middle Name -->
                       <div class="col-md-10">
                         <label for="middleName" class="form-label">Middle Name</label>
-                        <input class="form-control" type="text" name="middleName" id="middleName" placeholder="<?php echo $m_name?>" />
+                        <input class="form-control" type="text" name="middleName" id="middleName" value="<?php echo htmlspecialchars($m_name, ENT_QUOTES, 'UTF-8'); ?>" />
                       </div>
 
                       <!-- Last Name -->
                       <div class="col-md-10">
                         <label for="lastName" class="form-label">Last Name</label>
-                        <input class="form-control" type="text" name="lastName" id="lastName" placeholder="<?php echo $l_name?>" />
+                        <input class="form-control" type="text" name="lastName" id="lastName" value="<?php echo htmlspecialchars($l_name, ENT_QUOTES, 'UTF-8'); ?>" />
                       </div>
                     </div>
 
@@ -86,7 +86,7 @@
                       <!-- Username -->
                       <div class="col-md-10">
                         <label for="username" class="form-label">Username</label>
-                        <input class="form-control" type="text" id="username" name="username" placeholder="<?php echo $username?>" />
+                        <input class="form-control" type="text" id="username" name="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" />
                       </div>
 
                       <!-- Password -->

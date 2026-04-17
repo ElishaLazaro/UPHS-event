@@ -152,13 +152,8 @@
 
   <script>
     // Sidebar active state
-    const id = document.getElementById('4');
     const id2 = document.getElementById('4.5');
-    if(id) {
-      id.classList.toggle('active');
-      id.classList.toggle('open');
-    }
-    if(id2) {
+    if (id2) {
       id2.classList.toggle('active');
     }
 
