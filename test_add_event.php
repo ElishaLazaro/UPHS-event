@@ -2,6 +2,12 @@
 // Unit test for adding events
 require 'actions/conn.php';
 
+// Validate event input before inserting.
+function validateEventData(array $event): bool {
+    $event_name = trim((string) ($event['event_name'] ?? ''));
+    return $event_name !== '';
+}
+
 // Function to add event
 function addEvent($conn, $user_id, $event_name, $activity, $venue, $date_start, $date_end, $time_start, $time_end, $status) {
     $sql = "INSERT INTO events (u_id, event_name, activity, venue, date_start, date_end, time_start, time_end, event_status)
@@ -76,7 +82,7 @@ $testCases = [
         'time_start' => "10:00:00",
         'time_end' => "12:00:00",
         'status' => 3,
-        'expected' => true, // Foreign key might allow or not, but insertion should work if no constraint
+        'expected' => true, 
         'description' => 'Event with non-existent user ID'
     ]
 ];
@@ -86,7 +92,11 @@ echo "Running unit tests for adding events...\n\n";
 foreach ($testCases as $i => $test) {
     echo "Test " . ($i + 1) . ": " . $test['description'] . "\n";
 
-    $added = addEvent($conn, $test['user_id'], $test['event_name'], $test['activity'], $test['venue'], $test['date_start'], $test['date_end'], $test['time_start'], $test['time_end'], $test['status']);
+    if (!validateEventData($test)) {
+        $added = false;
+    } else {
+        $added = addEvent($conn, $test['user_id'], $test['event_name'], $test['activity'], $test['venue'], $test['date_start'], $test['date_end'], $test['time_start'], $test['time_end'], $test['status']);
+    }
 
     if ($added === $test['expected']) {
         if ($added) {

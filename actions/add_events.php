@@ -16,7 +16,7 @@ if (!isset($_POST['submit_event'])) {
     exit;
 }
 
-$event_name = (string) $_POST['event_name'];
+$event_name = trim((string) $_POST['event_name']);
 $activity = (string) ($_POST['activity'] ?? '');
 $venue = (string) $_POST['venue'];
 $date_start = (string) $_POST['date_start'];
@@ -24,6 +24,11 @@ $date_end = (string) $_POST['date_end'];
 $time_start = (string) $_POST['time_start'];
 $time_end = (string) $_POST['time_end'];
 $status = 3;
+
+if ($event_name === '') {
+    echo '<script>alert("Event name cannot be empty."); window.history.back();</script>';
+    exit;
+}
 
 $priority = isset($_POST['event_priority']) ? (string) $_POST['event_priority'] : 'minor';
 $is_main = $priority === 'main';
